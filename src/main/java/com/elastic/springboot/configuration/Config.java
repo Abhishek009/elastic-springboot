@@ -1,30 +1,29 @@
+
 package com.elastic.springboot.configuration;
 
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.erhlc.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.client.erhlc.RestClients;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.elastic.springboot.repository")
-public class Config {
+@ComponentScan(basePackages = { "com.elastic.springboot" })
+public class Config extends AbstractElasticsearchConfiguration {
 
-    @Bean
-    public RestHighLevelClient client() {
-        ClientConfiguration clientConfiguration
-                = ClientConfiguration.builder()
-                .connectedTo("localhost:9200")
-                .build();
+	@Value("${elasticsearch.url}")
+	private String elasticsearchUrl;
 
-        return RestClients.create(clientConfiguration).rest();
-    }
+	
+	  @Override public RestHighLevelClient elasticsearchClient() { final
+	  ClientConfiguration config = ClientConfiguration.builder()
+	  .connectedTo(elasticsearchUrl) .build();
+	  
+	  return RestClients.create(config).rest(); }
+	 
 
-    @Bean
-    public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchRestTemplate(client());
-    }
 }

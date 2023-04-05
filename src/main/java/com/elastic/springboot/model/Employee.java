@@ -1,7 +1,9 @@
 package com.elastic.springboot.model;
 
 import org.springframework.data.annotation.Id;
+//import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+
 
 @Document(indexName = "employeeidx")
 public class Employee {
@@ -43,4 +45,6 @@ public class Employee {
     public void setAge(int age) {
         this.age = age;
     }
+
+
 }
